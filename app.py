@@ -267,14 +267,14 @@ def main_dashboard():
             fig = px.pie(courses, names='category', values='revenue_estimate', 
                          hole=0.5, template="plotly_white", 
                          color_discrete_sequence=px.colors.sequential.Blues_r)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
         
         with c2:
             st.subheader("Difficulty Segmentation")
             fig = px.bar(courses['level'].value_counts().reset_index(), 
                          x='level', y='count', template="plotly_white",
                          color='level', color_discrete_sequence=px.colors.qualitative.Safe)
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
 
     # --- 2. ADVANCED MARKET ANALYTICS ---
     elif menu == "Advanced Market Analytics":
@@ -287,7 +287,7 @@ def main_dashboard():
             fig = px.scatter(courses, x="price", y="rating", size="num_reviews", color="category",
                              hover_name="course_title", template="plotly_white",
                              labels={"price": "Course Price (INR)", "rating": "Avg Rating"})
-            st.plotly_chart(fig, use_container_width=True)
+            st.plotly_chart(fig, width="stretch")
             
         with t2:
             st.subheader("Metric Correlation Analysis")
@@ -329,25 +329,24 @@ def main_dashboard():
                 sim_names = [courses.iloc[i[0]]['course_title'] for i in scores]
                 fig_sim = px.bar(x=sim_scores, y=sim_names, orientation='h', 
                                  title="Similarity Confidence Score", template="plotly_white")
-                st.plotly_chart(fig_sim, use_container_width=True)
+                st.plotly_chart(fig_sim, width="stretch")
 
     # --- 4. REVENUE & PERFORMANCE ---
     elif menu == "Revenue & Performance":
         st.title("💰 Revenue Intelligence Dashboard")
-        
         c_rev1, c_rev2 = st.columns(2)
         with c_rev1:
             st.subheader("Category Revenue Flow")
             rev_data = courses.groupby('category')['revenue_estimate'].sum().reset_index()
             fig_rev = px.funnel(rev_data.sort_values('revenue_estimate'), x='revenue_estimate', y='category', template="plotly_white")
-            st.plotly_chart(fig_rev, use_container_width=True)
+            st.plotly_chart(fig_rev, width="stretch")
             
         with c_rev2:
             st.subheader("Gross Cumulative Revenue")
             courses_sorted = courses.sort_values('revenue_estimate', ascending=False)
             courses_sorted['cum_rev'] = courses_sorted['revenue_estimate'].cumsum()
             fig_cum = px.area(courses_sorted, x=range(len(courses)), y='cum_rev', template="plotly_white")
-            st.plotly_chart(fig_cum, use_container_width=True)
+            st.plotly_chart(fig_cum, width="stretch")
 
     # --- 5. COLLABORATIVE FILTERING LAB ---
     elif menu == "Collaborative Filtering Lab":
@@ -372,7 +371,7 @@ def main_dashboard():
         with col_svd2:
             st.subheader("Explained Variance by Latent Factors")
             fig_var = px.line(np.cumsum(svd.explained_variance_ratio_), markers=True, template="plotly_white")
-            st.plotly_chart(fig_var, use_container_width=True)
+            st.plotly_chart(fig_var, width="stretch")
 
     # --- 6. DATA EXPLORER ---
     elif menu == "Data Explorer":
@@ -380,9 +379,9 @@ def main_dashboard():
         mode = st.radio("Access Level", ["Global Course Catalog", "User Interaction Logs"])
         
         if mode == "Global Course Catalog":
-            st.dataframe(courses, use_container_width=True)
+            st.dataframe(courses, width="stretch")
         else:
-            st.dataframe(ratings, use_container_width=True)
+            st.dataframe(ratings, width="stretch")
         
         st.download_button("Export Dataset (CSV)", courses.to_csv(index=False), "course_data_export.csv", "text/csv")
 
